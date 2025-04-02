@@ -2,7 +2,12 @@
 
 [English](README.md) | 中文
 
-这是一个使用 🤖 AI 对 GitHub Star 的仓库进行分类和总结的工具，特别适合安全研究人员和 CTF 选手使用。
+<div align="center">
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/1.44.0/files/icons/cursor.svg" alt="Cursor" width="32" height="32" />
+  <p>使用 Cursor 开发</p>
+</div>
+
+这是一个使用 🤖 AI 对 GitHub Star 的仓库进行分类和总结的工具。
 
 ## ✨ 功能特点
 
@@ -65,6 +70,6 @@ python main.py gen-readme
 
 欢迎提交 Issue 和 Pull Request 来帮助改进这个项目。
 
-## �� 许可证
+## 📄 许可证
 
 MIT License 

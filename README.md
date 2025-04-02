@@ -2,7 +2,12 @@
 
 English | [中文](README_zh.md)
 
-A tool that uses 🤖 AI to classify and summarize GitHub Star repositories, specifically designed for security researchers and CTF players.
+<div align="center">
+  <img src="https://registry.npmmirror.com/@lobehub/icons-static-svg/1.44.0/files/icons/cursor.svg" alt="Cursor" width="32" height="32" />
+  <p>Developed with Cursor</p>
+</div>
+
+A tool that uses 🤖 AI to classify and summarize GitHub Star repositories.
 
 ## ✨ Features
 
