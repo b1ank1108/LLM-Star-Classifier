@@ -1,14 +1,14 @@
 github:
-  token: your_github_token_here
-  username: your_github_username
+  token: ${TOKEN}
+  username: ${USERNAME}
   apply_categories: false
 
 openai:
-  api_base: https://api.openai.com/v1  # 或使用其他兼容的API端点
+  api_base: ${OPENAI_API_BASE}  # https://api.openai.com/v1或使用其他兼容的API端点
   api_keys:
-    - "your_openai_api_key_here"
+    - "${OPENAI_API_KEY}"
     # 在这里添加更多的API key
-  model: gpt-3.5-turbo  # 或其他支持的模型
+  model: ${OPENAI_MODEL}  # 或其他支持的模型
   max_tokens: 1024
   temperature: 0.7
   top_p: 0.7
