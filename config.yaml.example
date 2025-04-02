@@ -1,0 +1,38 @@
+github:
+  token: your_github_token_here
+  username: your_github_username
+  apply_categories: false
+
+openai:
+  api_base: https://api.openai.com/v1  # 或使用其他兼容的API端点
+  api_keys:
+    - "your_openai_api_key_here"
+    # 在这里添加更多的API key
+  model: gpt-3.5-turbo  # 或其他支持的模型
+  max_tokens: 1024
+  temperature: 0.7
+  top_p: 0.7
+  top_k: 50
+  frequency_penalty: 0.5
+
+database:
+  path: data/stars.db
+
+categories:
+- 信息搜集
+- AI应用
+- 逆向破解
+- CTF相关
+- 漏洞扫描
+- 红队&渗透测试
+- Web安全
+- 云安全
+- LLM安全
+- 取证溯源
+- bugbounty
+- 扫描字典
+- DevOps
+- 开发工具&框架
+- burpsuite插件
+- 代码审计
+- 其他 
