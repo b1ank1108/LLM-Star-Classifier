@@ -1,7 +1,6 @@
 github:
   token: ${TOKEN}
   username: ${USERNAME}
-  apply_categories: false
 
 openai:
   api_base: ${OPENAI_API_BASE}  # https://api.openai.com/v1或使用其他兼容的API端点
@@ -14,6 +13,12 @@ openai:
   top_p: 0.7
   top_k: 50
   frequency_penalty: 0.5
+
+concurrency:
+  fetch:
+    max_workers: 5  # 获取仓库时的并发数
+  classify:
+    max_workers: 3  # 分类时的并发数
 
 database:
   path: data/stars.db

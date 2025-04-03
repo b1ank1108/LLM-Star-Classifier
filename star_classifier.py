@@ -28,9 +28,11 @@ class StarClassifier:
             self.categories_data = {}
             
             # 初始化线程池和数据库锁
-            self.max_workers = self.config.get('concurrency', {}).get('max_workers', 1)
+            self.fetch_max_workers = self.config.get('concurrency', {}).get('fetch', {}).get('max_workers', 1)
+            self.classify_max_workers = self.config.get('concurrency', {}).get('classify', {}).get('max_workers', 1)
             self.db_lock = threading.Lock()
-            self.executor = ThreadPoolExecutor(max_workers=self.max_workers)
+            self.fetch_executor = ThreadPoolExecutor(max_workers=self.fetch_max_workers)
+            self.classify_executor = ThreadPoolExecutor(max_workers=self.classify_max_workers)
             
             # 初始化API key轮询
             self.api_keys = self.config['openai'].get('api_keys', [])
@@ -96,7 +98,7 @@ class StarClassifier:
             
             # 处理分页列表
             for repo in starred_repos:
-                future = self.executor.submit(self._process_single_repo, repo)
+                future = self.fetch_executor.submit(self._process_single_repo, repo)
                 futures.append(future)
                 total_repos += 1
             
@@ -249,7 +251,7 @@ class StarClassifier:
             # 使用线程池并发处理仓库
             futures = []
             for repo in repos:
-                future = self.executor.submit(self.classify_repo, repo)
+                future = self.classify_executor.submit(self.classify_repo, repo)
                 futures.append(future)
             
             # 等待所有任务完成
@@ -368,4 +370,5 @@ class StarClassifier:
 
     def __del__(self):
         """清理资源"""
-        self.executor.shutdown(wait=True) 
+        self.fetch_executor.shutdown(wait=True)
+        self.classify_executor.shutdown(wait=True) 
