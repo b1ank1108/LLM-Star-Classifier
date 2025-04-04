@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 class DatabaseError(Exception):
@@ -169,4 +169,40 @@ class Database:
                 
                 return repos
         except sqlite3.Error as e:
-            raise DatabaseError(f"获取分类仓库失败: {str(e)}") 
+            raise DatabaseError(f"获取分类仓库失败: {str(e)}")
+
+    def delete_repos_not_updated_since(self, timestamp, threshold_days=7):
+        """删除在指定时间之前更新的仓库
+        
+        Args:
+            timestamp: datetime对象，表示时间点
+            threshold_days: int，删除超过多少天未更新的仓库
+        
+        Returns:
+            tuple: (deleted_count, skipped_count) 删除的仓库数量和跳过的仓库数量
+        """
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                
+                # 首先获取可能要删除的仓库数量
+                cursor.execute('''
+                    SELECT COUNT(*) FROM repositories 
+                    WHERE updated_at < ?
+                ''', (timestamp,))
+                total_outdated = cursor.fetchone()[0]
+                
+                # 计算阈值时间
+                threshold_time = timestamp - timedelta(days=threshold_days)
+                
+                # 删除超过阈值时间的仓库
+                cursor.execute('''
+                    DELETE FROM repositories 
+                    WHERE updated_at < ?
+                ''', (threshold_time,))
+                deleted_count = cursor.rowcount
+                
+                conn.commit()
+                return deleted_count, total_outdated - deleted_count
+        except sqlite3.Error as e:
+            raise DatabaseError(f"删除旧仓库失败: {str(e)}") 

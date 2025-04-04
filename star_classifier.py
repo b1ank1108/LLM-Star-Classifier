@@ -8,6 +8,7 @@ from db import Database, DatabaseError
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from queue import Queue
 import threading
+from datetime import datetime
 
 class StarClassifier:
     def __init__(self):
@@ -68,7 +69,7 @@ class StarClassifier:
             try:
                 readme = repo.get_readme()
                 content = readme.decoded_content.decode('utf-8')
-                repo_data["readme"] = content[:500] # 只取前1200字
+                repo_data["readme"] = content[:500] # 只取前500字
             except:
                 repo_data["readme"] = ""
             
@@ -86,6 +87,9 @@ class StarClassifier:
         """获取用户star的所有仓库"""
         # TODO 超出rate limit的解决方案
         try:
+            # 记录开始更新的时间
+            update_start_time = datetime.now()
+            
             user = self.github.get_user()
             starred_repos = user.get_starred()
             
@@ -108,7 +112,18 @@ class StarClassifier:
                 if future.result():
                     success_count += 1
             
+            # 删除未更新的仓库（已取消star的）
+            threshold_days = self.config.get('database', {}).get('cleanup', {}).get('threshold_days', 7)
+            deleted_count, skipped_count = self.db.delete_repos_not_updated_since(
+                update_start_time, 
+                threshold_days=threshold_days
+            )
+            
             print(f"\n成功处理 {success_count}/{total_repos} 个仓库")
+            if deleted_count > 0 or skipped_count > 0:
+                print(f"发现 {deleted_count + skipped_count} 个未更新的仓库：")
+                print(f"- 已删除 {deleted_count} 个超过 {threshold_days} 天未更新的仓库")
+                print(f"- 暂时保留 {skipped_count} 个仓库（未超过清理阈值）")
             
         except Exception as e:
             print(f"获取Starred仓库失败: {str(e)}")

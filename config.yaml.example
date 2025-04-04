@@ -22,6 +22,8 @@ concurrency:
 
 database:
   path: data/stars.db
+  cleanup:
+    threshold_days: 7  # 超过7天未更新的仓库才会被删除
 
 categories:
 - 信息搜集
